@@ -163,7 +163,7 @@ function drawCanvasText() {
   context.fillStyle = '#888';
   context.font = '20px Arial';
   context.textAlign = 'center';
-  context.fillText('Drop and release an image or click to upload', canvas.width / 2, canvas.height / 2);
+  context.fillText('Drop and drop an image or click to upload', canvas.width / 2, canvas.height / 2);
 }
 
 /**

@@ -3,15 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Image Edtior</title>
-    <script type="module" src="./src/app.js"></script>
+    <title>Image-Processor Module</title>
+    <script type="module" src="./src/test.js"></script>
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
     <div id="image-container">
-      <h1>Image Editor</h1>
+      <h1>Image-Processor || Test App</h1>
       <div id="image-area">
-        <input type="file" id="fileInput" accept="image/*" hidden />
+        Click to upload image
+        <input type="file" id="fileInput" accept="image" />
         <span id="errorMessage"></span>
         <br />
         <canvas id="canvas"></canvas>
@@ -39,7 +40,6 @@
             value="0"
           />
         <button id="resetButton">Reset</button>
-        <button id="saveButton">Save and Download</button>
       </div>
     </div>
   </body>

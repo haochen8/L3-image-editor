@@ -15,7 +15,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@lnu/eslint-config": "^1.1.10",
     "vite": "^5.4.6"
   }
 }

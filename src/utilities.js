@@ -134,6 +134,36 @@ export function isValidImageType (file) {
 }
 
 /**
+ * Create an image element from a data URL and resolve the image data.
+ *
+ * @param {string} dataUrl - The data URL of the image
+ * @param {Function} resolve - The resolve function for the promise
+ * @param {Function} reject - The reject function for the promise
+ */
+function createImageFromDataURL(dataUrl, resolve, reject) {
+  const image = new Image()
+  image.onload = () => resolveImageDataFromImage(image, resolve)
+  image.onerror = () => reject(new Error('Error loading image'))
+  image.src = dataUrl
+}
+
+/**
+ * Resolve the image data from an image element.
+ *
+ * @param {HTMLImageElement} image - The image element
+ * @param {Function} resolve - The resolve function for the promise
+ */
+function resolveImageDataFromImage (image, resolve) {
+  const canvas = document.createElement('canvas')
+  canvas.width = image.width
+  canvas.height = image.height
+  const context = canvas.getContext('2d')
+  context.drawImage(image, 0, 0)
+  const imageData = context.getImageData(0, 0, image.width, image.height)
+  resolve(imageData)
+}
+
+/**
  * Load an image from a given source.
  *
  * @param {string|File} file - The source of the image to load.
@@ -146,43 +176,10 @@ export function loadImage (file) {
       reject(new Error('Invalid image file'))
     }
 
-    // Create a new FileReader
+    // Create a file reader to read the image file
     const reader = new FileReader()
-    /**
-     * When the file is loaded as a data URL, create a new image and set the source to the data.
-     */
-    reader.onload = () => {
-      const image = new Image()
-      /**
-       * When the image is loaded, create a canvas and context to draw the image.
-       */
-      image.onload = () => {
-        // Create a canvas and context to draw the image
-        const canvas = document.createElement('canvas')
-        canvas.width = image.width
-        canvas.height = image.height
-        const context = canvas.getContext('2d')
-        context.drawImage(image, 0, 0)
-        const imageData = context.getImageData(0, 0, image.width, image.height)
-        resolve(imageData)
-      }
-      // Set the image source to the data
-      image.src = reader.result
-
-      /**
-       * When the image fails to load, reject the promise.
-       */
-      image.onerror = () => {
-        reject(new Error('Error loading image'))
-      }
-
-      /**
-       * When there is an error loading the image, reject the promise.
-       */
-      reader.onerror = () => {
-        reject(new Error('Error loading image'))
-      }
-    }
+    reader.onload = () => createImageFromDataURL(reader.result, resolve, reject)
+    reader.onerror = () => reject(new Error('Error reading image file'))
     // Read the file as a data URL
     reader.readAsDataURL(file)
   })

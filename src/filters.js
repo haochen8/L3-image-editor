@@ -61,29 +61,16 @@ export function applyGrayscale (imageData) {
  * @returns {ImageData} - The image data of the canvas
  */
 export function adjustBrightness (imageData, value) {
-  // Create a copy of the image data
-  const newImageData = imageDataCopy(imageData)
-  const data = newImageData.data
 
-  /**
-   * Clamp a value to be between 0 and 255.
-   *
-   * @param {number} val - The value to clamp
-   * @returns {number} - The clamped value
-   */
-  const clamp = (val) => Math.min(255, Math.max(0, val))
-
-  // Calculate the brightness value
   const brightness = value / 100 * 255
 
-  // Apply the brightness adjustment to each pixel
-  for (let i = 0; i < data.length; i += 4) {
-    // Adjust the red, green, and blue values
-    data[i] = clamp(data[i] + brightness) // Red
-    data[i + 1] = clamp(data[i + 1] + brightness) // Green
-    data[i + 2] = clamp(data[i + 2] + brightness) // Blue
-  }
-  return newImageData
+  // Add the brightness value to each pixel
+  const pixel = (red, green, blue) => [
+    clamp(red + brightness),
+    clamp(green + brightness),
+    clamp(blue + brightness)
+  ]
+  return applyFilter(imageData, pixel)
 }
 
 /**
@@ -94,28 +81,16 @@ export function adjustBrightness (imageData, value) {
  * @returns {ImageData} - The image data of the canvas
  */
 export function adjustContrast (imageData, value) {
-  // Create a copy of the image data
-  const newImageData = imageDataCopy(imageData)
-  const data = newImageData.data
-
-  /**
-   * Clamp a value to be between 0 and 255.
-   *
-   * @param {number} val - The value to clamp
-   * @returns {number} - The clamped value
-   */
-  const clamp = (val) => Math.min(255, Math.max(0, val))
-
-  // Calculate the contrast factor formula
+  
   const contrastFactor = (259 * (value + 255)) / (255 * (259 - value))
 
   // Apply the contrast adjustment to each pixel using the formula
-  for (let i = 0; i < data.length; i += 4) {
-    data[i] = clamp(contrastFactor * (data[i] - 128) + 128) // Red
-    data[i + 1] = clamp(contrastFactor * (data[i + 1] - 128) + 128) // Green
-    data[i + 2] = clamp(contrastFactor * (data[i + 2] - 128) + 128) // Blue
-  }
-  return newImageData
+  const pixel = (red, green, blue) => [
+    clamp(contrastFactor * (red - 128) + 128),
+    clamp(contrastFactor * (green - 128) + 128),
+    clamp(contrastFactor * (blue - 128) + 128)
+  ]
+  return applyFilter(imageData, pixel)
 }
 
 /**

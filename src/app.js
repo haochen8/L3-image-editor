@@ -180,7 +180,6 @@ function displayImage (imageData) {
   context.putImageData(imageData, 0, 0)
 }
 
-// Rita instruktionstexten på canvas när sidan laddas
 canvas.width = 800;
 canvas.height = 600;
 drawCanvasText();

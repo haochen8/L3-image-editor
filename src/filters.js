@@ -9,41 +9,48 @@
 import { imageDataCopy } from './utilities.js'
 
 /**
+ * Apply a filter to the image. 
+ *
+ * @param {*} imageData - The image data to apply the filter
+ * @param {*} pixel - The pixel value to apply the filter
+ * @returns 
+ */
+function applyFilter (imageData, pixel) {
+  const newImageData = imageDataCopy(imageData)
+  const data = newImageData.data
+
+  for (let i = 0; i < data.length; i += 4) {
+    const [red, green, blue] = pixel(data[i], data[i + 1], data[i + 2])
+    data[i] = red
+    data[i + 1] = green
+    data[i + 2] = blue
+  }
+  return newImageData
+}
+
+/**
+ * Clamp a value to be between 0 and 255. 
+ * 
+ * @param {*} value - The value to clamp
+ * @returns - The clamped value
+ */
+function clamp (value) {
+  return Math.min(255, Math.max(0, value))
+}
+
+/**
  * Apply a gray scale filter to the image.
  *
  * @param {ImageData} imageData - The image data to apply the gray scale filter
  * @returns {ImageData} - The image data of the canvas
  */
 export function applyGrayscale (imageData) {
-  // Create a copy of the image data
-  const newImageData = imageDataCopy(imageData)
-  const data = newImageData.data
-
-  /**
-   * Calculate the gray value of a pixel using the NFSC formula.
-   *
-   * @param {number} red - The red value of the pixel
-   * @param {number} green - The green value of the pixel
-   * @param {number} blue - The blue value of the pixel
-   * @returns {number} - The gray value of the pixel
-   */
-  const formula = (red, green, blue) =>
-    0.299 * red + 0.587 * green + 0.114 * blue
-
-  // Apply the formula to each pixel
-  for (let i = 0; i < data.length; i += 4) {
-    const red = data[i]
-    const green = data[i + 1]
-    const blue = data[i + 2]
-    // Calculate the gray value
-    const gray = formula(red, green, blue)
-    // Set the red, green, and blue values to the gray value
-    data[i] = gray
-    data[i + 1] = gray
-    data[i + 2] = gray
+  // NFSC formula for gray scale
+  const formula = (red, green, blue ) => {
+    const gray = 0.299 * red + 0.587 * green + 0.114 * blue
+    return [gray, gray, gray]
   }
-
-  return newImageData
+  return applyFilter(imageData, formula)
 }
 
 /**

@@ -99,30 +99,18 @@ export function adjustContrast (imageData, value) {
  * @param {ImageData} imageData - The image data to apply the noise filter
  * @returns {ImageData} - The image data of the canvas
  */
-export function applyNoise (imageData) {
-  // Create a copy of the image data
-  const newImageData = imageDataCopy(imageData)
-  const data = newImageData.data
-
-  /**
-   * Clamp a value to be between 0 and 255.
-   *
-   * @param {number} value - The value to clamp
-   * @returns {number} - The clamped value
-   */
-  const clamp = (value) => Math.min(255, Math.max(0, value))
-
-  const amount = 50
+export function applyNoise (imageData, amount = 50) {
 
   // Apply the noise adjustment to each pixel using the noise formula
-  for (let i = 0; i < data.length; i += 4) {
-    // Calculation of the noise formula
-    const noiseFormula = (Math.random() * 2 - 1) * amount
-    data[i] = clamp(data[i] + noiseFormula) // Red
-    data[i + 1] = clamp(data[i + 1] + noiseFormula) // Green
-    data[i + 2] = clamp(data[i + 2] + noiseFormula) // Blue
+  const pixel = (red, green, blue) => {
+    const noise = (Math.random() * 2 - 1) * amount
+    return [
+      clamp(red + noise),
+      clamp(green + noise),
+      clamp(blue + noise)
+    ]
   }
-  return newImageData
+  return applyFilter(imageData, pixel)
 }
 
 /**
@@ -132,15 +120,8 @@ export function applyNoise (imageData) {
  * @returns {ImageData} - The image data of the canvas
  */
 export function applyInvert (imageData) {
-  // Create a copy of the image data
-  const newImageData = imageDataCopy(imageData)
-  const data = newImageData.data
 
   // Subtracting 255 with image data to create invert filter
-  for (let i = 0; i < data.length; i += 4) {
-    data[i] = 255 - data[i] // Red
-    data[i + 1] = 255 - data[i + 1] // Green
-    data[i + 2] = 255 - data[i + 2] // Blue
-  }
-  return newImageData
+  const pixel = (red, green, blue) => [255 - red, 255 - green, 255 - blue]
+  return applyFilter(imageData, pixel)
 }

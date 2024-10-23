@@ -7,44 +7,42 @@
  */
 
 /**
- * Rotate an image by a given angle.
- *
- * @param {ImageData} imageData - The image data to rotate
- * @param {number} angle - The angle to rotate the image by
- * @returns {ImageData} - The rotated image data
+ * Set the angle to be between 0 and 360 degrees, rounded to the nearest 90 degrees.
+ * 
+ * @param {number} angle - The original angle
+ * @returns {number} - The normalized angle
  */
-export function rotateImage (imageData, angle) {
-  // Set angle to a value between 0 and 360
+function roundAngle (angle) {
   angle = angle % 360
   if (angle < 0) {
     angle += 360
   }
+  return Math.round(angle / 90) * 90
+}
 
-  // Round angle to the nearest 90 degrees
-  angle = Math.round(angle / 90) * 90
-
-  // If angle is 0 or 360, return the original image
-  if (angle === 0 || angle === 360) {
-    return imageData
-  }
-
-  // Set new dimensions for the rotated image
-  let newWidth, newHeight
+/**
+ * Calculate the new dimensions for the rotated image.
+ *
+ * @param {ImageData} imageData - The image data to rotate
+ * @param {number} angle - The angle to rotate the image by
+ * @returns {Object} - The new width and height
+ */
+function calculateDimensions (imageData, angle) {
   if (angle === 90 || angle === 270) {
-    newWidth = imageData.height
-    newHeight = imageData.width
-  } else {
-    // If angle is 180 degrees
-    newWidth = imageData.width
-    newHeight = imageData.height
+    return { newWidth: imageData.height, newHeight: imageData.width }
   }
+  return { newWidth: imageData.width, newHeight: imageData.height }
+}
 
-  // Create a new canvas and context for the rotated image
-  const canvas = document.createElement('canvas')
-  canvas.width = newWidth
-  canvas.height = newHeight
-  const context = canvas.getContext('2d')
-
+/**
+ * Apply the correct rotation transformation based on the angle.
+ *
+ * @param {CanvasRenderingContext2D} context - The canvas context
+ * @param {number} angle - The angle to rotate the image by
+ * @param {number} newWidth - The new width of the rotated image
+ * @param {number} newHeight - The new height of the rotated image
+ */
+function applyRotation (context, angle, newWidth, newHeight) {
   // Apply transformation based on angle
   context.save()
   if (angle === 90) {
@@ -57,21 +55,70 @@ export function rotateImage (imageData, angle) {
     context.translate(0, newHeight)
     context.rotate((3 * Math.PI) / 2)
   }
+}
 
-  // Create temporary canvas and context for the original image
+/**
+ * Create the rotated image data based on the given angle.
+ *
+ * @param {ImageData} imageData - The image data to rotate
+ * @param {number} angle - The angle to rotate the image by
+ * @param {number} newWidth - The new width of the rotated image
+ * @param {number} newHeight - The new height of the rotated image
+ * @returns {ImageData} - The rotated image data
+ */
+function createRotatedImageData (imageData, newWidth, newHeight, angle) {
+  // Create a canvas and context to draw the rotated image
+  const canvas = document.createElement('canvas')
+  canvas.width = newWidth
+  canvas.height = newHeight
+  const context = canvas.getContext('2d')
+
+  context.save()
+  applyRotation(context, angle, newWidth, newHeight)
+
+
+  // Draw original image on the transformed context
+  const temporaryCanvas = createTemporaryCanvas(imageData)
+  context.drawImage(temporaryCanvas, 0, 0)
+  context.restore()
+
+  return context.getImageData(0, 0, newWidth, newHeight)
+}
+
+/**
+ * Create a temporary canvas to draw the image data.
+ * 
+ * @param {ImageData} imageData - The image data to rotate
+ * @returns 
+ */
+function createTemporaryCanvas (imageData) {
   const temporaryCanvas = document.createElement('canvas')
   temporaryCanvas.width = imageData.width
   temporaryCanvas.height = imageData.height
   const temporaryContext = temporaryCanvas.getContext('2d')
   temporaryContext.putImageData(imageData, 0, 0)
+  return temporaryCanvas
+}
 
-  // Draw original image on the transformed context
-  context.drawImage(temporaryCanvas, 0, 0)
-  context.restore()
+/**
+ * Rotate an image by a given angle.
+ *
+ * @param {ImageData} imageData - The image data to rotate
+ * @param {number} angle - The angle to rotate the image by
+ * @returns {ImageData} - The rotated image data
+ */
+export function rotateImage (imageData, angle) {
+  // Round the angle to the nearest 90 degrees
+  const roundedAngle = roundAngle(angle)
+  if (roundedAngle === 0 || roundedAngle === 360) {
+    return imageData
+  }
 
-  // Get the rotated image data and return it
-  const rotatedImageData = context.getImageData(0, 0, newWidth, newHeight)
+  // Calculate the new dimensions for the rotated image
+  const { newWidth, newHeight } = calculateDimensions(imageData, roundedAngle)
 
+  // Get the rotated image data
+  const rotatedImageData = createRotatedImageData(imageData, newWidth, newHeight, roundedAngle)
   return rotatedImageData
 }
 

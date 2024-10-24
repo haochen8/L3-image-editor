@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image-Processor Module</title>
+    <script type="module" crossorigin src="/assets/test-CtVPRYf-.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/ImageProcessor-DlgxIV8o.js">
+    <link rel="stylesheet" crossorigin href="/assets/test-CtXpY-ek.css">
+  </head>
+  <body>
+    <div id="image-container">
+      <h1>Image-Processor || Test App</h1>
+      <div id="image-area">
+        Click to upload image
+        <input type="file" id="fileInput" accept="image" />
+        <span id="errorMessage"></span>
+        <br />
+        <canvas id="canvas"></canvas>
+        <br />
+        <button id="rotateButton">Rotate</button>
+        <button id="grayScaleButton">GrayScale</button>
+        <button id="noiseButton">Noise</button>
+        <button id="invertButton">Invert</button>
+        <label for="contrast">Contrast</label>
+          <input
+            type="range"
+            id="contrastInput"
+            name="contrast"
+            min="-100"
+            max="100"
+            value="0"
+          />
+          <label for="brightness">Brightness</label>
+          <input
+            type="range"
+            id="brightnessInput"
+            name="brightness"
+            min="-100"
+            max="100"
+            value="0"
+          />
+        <button id="resetButton">Reset</button>
+      </div>
+    </div>
+  </body>
+</html>

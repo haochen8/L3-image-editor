@@ -56,6 +56,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE)
 
 ## Contact & Author
 - Hao Chen
-- Email: hc222ig.student@lnu.se
+- Email: hc222ig@student.lnu.se
 - Feel free to contribute to the project by forking the repository and submitting a pull request!
 

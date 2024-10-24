@@ -1,2 +1,2 @@
-# L3-image-editor
-Image editor
+# Image Editor Application
+

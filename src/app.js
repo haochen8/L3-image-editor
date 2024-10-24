@@ -172,11 +172,9 @@ function drawCanvasText() {
  * @param {ImageData} imageData - The image data to display.
  */
 function displayImage (imageData) {
-  // Set the canvas dimensions to match the image
   canvas.width = imageData.width
   canvas.height = imageData.height
   errorMessage.textContent = ''
-  // Draw the image data on the canvas
   context.putImageData(imageData, 0, 0)
 }
 

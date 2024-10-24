@@ -64,7 +64,6 @@ export function adjustBrightness (imageData, value) {
 
   const brightness = value / 100 * 255
 
-  // Add the brightness value to each pixel
   const pixel = (red, green, blue) => [
     clamp(red + brightness),
     clamp(green + brightness),
@@ -81,10 +80,9 @@ export function adjustBrightness (imageData, value) {
  * @returns {ImageData} - The image data of the canvas
  */
 export function adjustContrast (imageData, value) {
-  
+
   const contrastFactor = (259 * (value + 255)) / (255 * (259 - value))
 
-  // Apply the contrast adjustment to each pixel using the formula
   const pixel = (red, green, blue) => [
     clamp(contrastFactor * (red - 128) + 128),
     clamp(contrastFactor * (green - 128) + 128),
@@ -101,7 +99,6 @@ export function adjustContrast (imageData, value) {
  */
 export function applyNoise (imageData, amount = 50) {
 
-  // Apply the noise adjustment to each pixel using the noise formula
   const pixel = (red, green, blue) => {
     const noise = (Math.random() * 2 - 1) * amount
     return [
@@ -120,8 +117,6 @@ export function applyNoise (imageData, amount = 50) {
  * @returns {ImageData} - The image data of the canvas
  */
 export function applyInvert (imageData) {
-
-  // Subtracting 255 with image data to create invert filter
   const pixel = (red, green, blue) => [255 - red, 255 - green, 255 - blue]
   return applyFilter(imageData, pixel)
 }

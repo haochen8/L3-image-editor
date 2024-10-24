@@ -43,8 +43,6 @@ function calculateDimensions (imageData, angle) {
  * @param {number} newHeight - The new height of the rotated image
  */
 function applyRotation (context, angle, newWidth, newHeight) {
-  // Apply transformation based on angle
-  context.save()
   if (angle === 90) {
     context.translate(newWidth, 0)
     context.rotate(Math.PI / 2)
@@ -67,7 +65,6 @@ function applyRotation (context, angle, newWidth, newHeight) {
  * @returns {ImageData} - The rotated image data
  */
 function createRotatedImageData (imageData, newWidth, newHeight, angle) {
-  // Create a canvas and context to draw the rotated image
   const canvas = document.createElement('canvas')
   canvas.width = newWidth
   canvas.height = newHeight
@@ -77,7 +74,6 @@ function createRotatedImageData (imageData, newWidth, newHeight, angle) {
   applyRotation(context, angle, newWidth, newHeight)
 
 
-  // Draw original image on the transformed context
   const temporaryCanvas = createTemporaryCanvas(imageData)
   context.drawImage(temporaryCanvas, 0, 0)
   context.restore()
@@ -108,16 +104,13 @@ function createTemporaryCanvas (imageData) {
  * @returns {ImageData} - The rotated image data
  */
 export function rotateImage (imageData, angle) {
-  // Round the angle to the nearest 90 degrees
   const roundedAngle = roundAngle(angle)
   if (roundedAngle === 0 || roundedAngle === 360) {
     return imageData
   }
 
-  // Calculate the new dimensions for the rotated image
   const { newWidth, newHeight } = calculateDimensions(imageData, roundedAngle)
 
-  // Get the rotated image data
   const rotatedImageData = createRotatedImageData(imageData, newWidth, newHeight, roundedAngle)
   return rotatedImageData
 }
@@ -171,16 +164,15 @@ function resolveImageDataFromImage (image, resolve) {
  */
 export function loadImage (file) {
   return new Promise((resolve, reject) => {
-    // If the file is not a valid image file
     if (!isValidImageType(file)) {
       reject(new Error('Invalid image file'))
     }
 
-    // Create a file reader to read the image file
+    // Read the image file as a data URL
     const reader = new FileReader()
     reader.onload = () => createImageFromDataURL(reader.result, resolve, reject)
     reader.onerror = () => reject(new Error('Error reading image file'))
-    // Read the file as a data URL
+    
     reader.readAsDataURL(file)
   })
 }

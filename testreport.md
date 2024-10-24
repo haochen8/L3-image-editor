@@ -1,4 +1,4 @@
-## Test Cases
+## Manual Test Cases
 
 | Test Case ID | Test Case Description                   | Input Data                     | Expected Result                           |
 |--------------|-----------------------------------------|--------------------------------|-------------------------------------------|
